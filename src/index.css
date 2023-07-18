@@ -62,3 +62,32 @@
 .Post a:visited {
   color: #14c;
 }
+
+.More {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: right;
+}
+
+.InputField {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.Sidebar a, .dropdown-item, .dropdown-item.active {
+  color: #444;
+}
+
+.Sidebar .nav-item .active, .dropdown-item.active {
+  background-color: #d3f;
+}
+
+.Write {
+  margin-bottom: 10px;
+  padding: 30px 0px 40px 0px;
+  border-bottom: 1px solid #eee;
+}
+
+.Write form {
+  width: 100%;
+}

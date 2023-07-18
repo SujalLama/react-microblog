@@ -10,6 +10,8 @@ export default function UserPage () {
     const {username} = useParams();
     const [user, setUser] = useState();
     const api = useApi();
+    const [isFollower, setIsFollower] = useState();
+    
 
     useEffect(() => {
         (async () => {

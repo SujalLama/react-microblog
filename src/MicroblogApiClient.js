@@ -6,19 +6,48 @@ export default class MicroblogApiClient {
     }
 
     async request(options) {
+        let response = await this.requestInternal(options);
+
+        if(response.status === 401 && options.url !== '/tokens') {
+            const refreshResponse = await this.put('/tokens', {
+                access_token: localStorage.getItem('access-Token'),
+            });
+
+            // console.log(refreshResponse);
+
+            if(refreshResponse.ok) {
+                localStorage.setItem('accessToken', refreshResponse.body.access_token);
+                response = await this.requestInternal(options);
+            }
+        }
+        return response;
+    }
+
+    async requestInternal(options) {
         let query = new URLSearchParams(options.query || {}).toString();
 
         if(query !== '') {
             query = '?' + query;
         }
 
-        let response;
+        // for refresh token
+        let response = await fetch(this.base_url + options.url + query, {
+            method: options.method,
+            headers: {
+                'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                    ...options.headers,
+            },
+            credentials: options.url === '/tokens' ? 'include' : 'omit',
+            body: options.body ? JSON.stringify(options.body) : null
+        })
 
         try {
             response = await fetch(this.base_url + options.url + query, {
                 method: options.method,
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
                     ...options.headers,
                 },
                 body: options.body ? JSON.stringify(options.body) : null
@@ -58,5 +87,30 @@ export default class MicroblogApiClient {
 
     async delete(url, options) {
         return this.request({method: 'DELETE', url, ...options});
+    }
+
+    async login(username, password) {
+        // The null value passed is for body
+        // We don't require to pass data in body but instead in header
+        const response = await this.post('/tokens', null, {
+            headers: {
+                Authorization: 'Basic ' + btoa(username + ":" + password)
+            }
+        });
+
+        if(!response.ok) {
+            return response.status === 401 ? 'fail' : 'error';
+        }
+        localStorage.setItem('accessToken', response.body.access_token);
+        return 'ok';
+    }
+
+    async logout() {
+        await this.delete('/tokens');
+        localStorage.removeItem('accessToken');
+    }
+
+    isAuthenticated() {
+        return localStorage.getItem('accessToken') !== null;
     }
 }
