@@ -10,19 +10,22 @@ import FeedPage from "./pages/FeedPage";
 import ExplorePage from "./pages/ExplorePage";
 import Loginpage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
+import ApiProvider from "./contexts/ApiProvider";
 
 export default function App () {
 
   return <Container fluid className="App">
     <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<FeedPage />} />
-        <Route path="/explore" element={<ExplorePage />} />
-        <Route path="/user/:username" element={<UserPage />} />
-        <Route path="/login" element={<Loginpage />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      <ApiProvider>
+        <Header />
+        <Routes>
+          <Route path="/" element={<FeedPage />} />
+          <Route path="/explore" element={<ExplorePage />} />
+          <Route path="/user/:username" element={<UserPage />} />
+          <Route path="/login" element={<Loginpage />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </ApiProvider>
     </BrowserRouter>
   </Container>
 }

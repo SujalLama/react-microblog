@@ -1,23 +1,35 @@
 import { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import Post from "./Post";
+import { useApi } from "../contexts/ApiProvider";
 
-const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+export default function Posts ({content}) {
+    const [posts, setPosts] = useState(null);
+    const api = useApi();
 
-export default function Posts () {
-    const [posts, setPosts] = useState();
+    let url;
+    switch(content) {
+        case 'feed' || undefined:
+            url = '/feed';
+            break;
+        case 'explore':
+            url = '/posts';
+            break;
+        default:
+            url = `/users/${content}/posts`;
+            break;
+    }
 
     useEffect(() => {
         (async () => {
-            const response = await fetch(BASE_API_URL + "/api/feed");
+            const response = await api.get(url);
             if(response?.ok) {
-                const results = await response.json();
-                setPosts(results.data);
+                setPosts(response.body.data);
             } else {
                 setPosts(null)
             }
         })();
-    }, [])
+    }, [api, url])
 
     return <>
         {
