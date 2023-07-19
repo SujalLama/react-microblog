@@ -28,7 +28,7 @@ export default function ResetRequestPage() {
         else {
             emailField.current.value = '';
             setFormErrors({});
-            flash('You will receive an email with instructions ' + 'to reset your password.', 'info');
+            flash('You will receive an email with instructions to reset your password.', 'info');
         }
     }
 

@@ -24,7 +24,7 @@ export default function EditUserPage () {
 
         usernameField.current.focus();
 
-    }, [])
+    }, [user])
 
     const onSubmit = async (event) => {
         event.preventDefault();
