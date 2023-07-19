@@ -1,7 +1,8 @@
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
 export default class MicroblogApiClient {
-    constructor () {
+    constructor (onError) {
+        this.onError = onError;
         this.base_url = BASE_API_URL + '/api';
     }
 
@@ -13,13 +14,16 @@ export default class MicroblogApiClient {
                 access_token: localStorage.getItem('access-Token'),
             });
 
-            // console.log(refreshResponse);
-
             if(refreshResponse.ok) {
                 localStorage.setItem('accessToken', refreshResponse.body.access_token);
                 response = await this.requestInternal(options);
             }
         }
+
+        if(response.status >= 500 && this.onError) {
+            this.onError(response);
+        }
+
         return response;
     }
 

@@ -7,7 +7,6 @@ import { NavLink } from 'react-router-dom';
 export default function Header () {
     const {user, logout} = useUser();
 
-    console.log(user);
     return (
         <Navbar bg="light" sticky="top" className="Header">
             <Container>
@@ -22,6 +21,10 @@ export default function Header () {
                                     <Image src={user.avatar_url + '&s=32'} roundedCircle />} align="end">
                                     <NavDropdown.Item as={NavLink} to={'/user/' + user.username}>
                                         Profile
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                    <NavDropdown.Item as={NavLink} to="/password">
+                                        Change Password
                                     </NavDropdown.Item>
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item onClick={logout}>
